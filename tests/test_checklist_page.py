@@ -2,10 +2,15 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 
-from pakkifile.registry.files import load_entry
+from pakkifile.registry.files import load_registry
 from pakkifile.web.checklist import render_checklist
 
-ENTRY = load_entry(Path("registry-data/entries/de-islamabad-study-d.yaml"))
+REGISTRY = load_registry(Path("registry-data"))
+ENTRY = next(
+    e
+    for e in REGISTRY.entries
+    if e.authority.name == "German Embassy Islamabad" and e.application.visa_category == "D"
+)
 
 
 class _Rows(HTMLParser):
@@ -34,7 +39,7 @@ class _Rows(HTMLParser):
 
 def _rows() -> list[str]:
     parser = _Rows()
-    parser.feed(render_checklist(ENTRY))
+    parser.feed(render_checklist(ENTRY, REGISTRY.sources))
     return [" ".join(r.split()) for r in parser.rows]
 
 
@@ -49,7 +54,7 @@ def test_each_requirement_is_one_row_with_type_and_citation() -> None:
 
 def test_page_links_to_the_source() -> None:
     assert 'href="https://pakistan.diplo.de/pk-en/service/2-study-visa-seite-1676104"' in (
-        render_checklist(ENTRY)
+        render_checklist(ENTRY, REGISTRY.sources)
     )
 
 
