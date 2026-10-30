@@ -4,9 +4,9 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `./scripts/check.sh` passes on a clean tree
-- [ ] `./scripts/check.sh --fast` fails when a lint error is introduced
-- [ ] CI workflow installs uv and Python 3.12 before running the script
-- [ ] The run-the-app row in AGENTS.md stays unset (no runnable app yet)
+- [x] `./scripts/check.sh` passes on a clean tree
+- [x] `./scripts/check.sh --fast` fails when a lint error is introduced
+- [x] CI workflow installs uv and Python 3.12 before running the script
+- [x] The run-the-app row in AGENTS.md stays unset (no runnable app yet)
