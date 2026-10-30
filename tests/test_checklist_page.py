@@ -3,7 +3,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from pakkifile.web.checklist import render_checklist
-from tests.helpers import REGISTRY, islamabad_study
+from tests.helpers import AS_OF, REGISTRY, islamabad_study
 
 ENTRY = islamabad_study()
 
@@ -34,7 +34,7 @@ class _Rows(HTMLParser):
 
 def _rows() -> list[str]:
     parser = _Rows()
-    parser.feed(render_checklist(ENTRY, REGISTRY.sources))
+    parser.feed(render_checklist(ENTRY, REGISTRY.sources, AS_OF))
     return [" ".join(r.split()) for r in parser.rows]
 
 
@@ -45,11 +45,12 @@ def test_each_requirement_is_one_row_with_type_and_citation() -> None:
     assert "Conditional" in rows[2] and "applicable to the course of study" in rows[2]
     for row in rows:
         assert "Mandatory documents" in row
+        assert "High" in row
 
 
 def test_page_links_to_the_source() -> None:
     assert 'href="https://pakistan.diplo.de/pk-en/service/2-study-visa-seite-1676104"' in (
-        render_checklist(ENTRY, REGISTRY.sources)
+        render_checklist(ENTRY, REGISTRY.sources, AS_OF)
     )
 
 

@@ -95,7 +95,7 @@ def run(conn: Connection, out: Path) -> list[Result]:
     same = published == rebuilt and registry.sources[TRACER_SOURCE.source_id] == source
     results.append(Result("registry", "published entry matches source", str(same), same))
 
-    checklist = render_checklist(published, registry.sources)
+    checklist = render_checklist(published, registry.sources, date.today())
     rows = len(_found(checklist, "requirement"))
     results.append(
         Result(

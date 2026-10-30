@@ -3,12 +3,13 @@
 {% block main %}
 <h1>{{ entry.authority.name }} · {{ entry.application.label }}</h1>
 <table>
-<thead><tr><th>Requirement</th><th>Type</th><th>Source</th></tr></thead>
+<thead><tr><th>Requirement</th><th>Type</th><th>Confidence</th><th>Source</th></tr></thead>
 <tbody>
 {% for req in entry.requirements %}
 <tr class="requirement">
 <td>{{ req.text }}</td>
 <td>{{ req.type | capitalize }}{% if req.condition %}: {{ req.condition }}{% endif %}</td>
+<td>{{ levels[req.id] }}</td>
 <td>
 {% for c in req.citations %}{% set s = sources[c.source] %}
 {% if c.stance == "conflicts" %}Conflicts: {% endif %}
