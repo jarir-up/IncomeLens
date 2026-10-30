@@ -2,15 +2,10 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 
-from pakkifile.registry.files import load_registry
 from pakkifile.web.checklist import render_checklist
+from tests.helpers import REGISTRY, islamabad_study
 
-REGISTRY = load_registry(Path("registry-data"))
-ENTRY = next(
-    e
-    for e in REGISTRY.entries
-    if e.authority.name == "German Embassy Islamabad" and e.application.visa_category == "D"
-)
+ENTRY = islamabad_study()
 
 
 class _Rows(HTMLParser):
