@@ -1,0 +1,27 @@
+name: gates
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  checks:
+    # Runs on description edits too: a skipped run would count as passing.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Add your stack's setup step here (setup-node, setup-python, ...).
+      - run: ./scripts/check.sh
+
+  rules:
+    # Also re-runs when the PR description is edited, so a new waiver takes effect.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 scripts/rules_gate.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RULES_GATE_MODEL: ${{ vars.RULES_GATE_MODEL }}
+          BASE_REF: ${{ github.base_ref }}
