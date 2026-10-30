@@ -41,6 +41,10 @@ The rank of a source: official checklist above consulate page above service-prov
 A computed measure of how sure the registry is about a requirement, from source authority, recency and agreement across sources.
 _Avoid_: Score, approval odds
 
+**Auto-publish**:
+A requirement published without a maintainer's review because it passes the approved rule; every other requirement needs review.
+_Avoid_: Approve (reserved for the owner's decisions)
+
 **Registry**:
 The public, versioned collection of requirements across authorities.
 _Avoid_: Knowledge base, database

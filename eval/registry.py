@@ -17,6 +17,7 @@ import yaml
 
 from pakkifile.registry.confidence import confidence
 from pakkifile.registry.files import load_registry
+from pakkifile.registry.publish import publish_status
 
 LABELS = Path("evaldata/labels/confidence-order.yaml")
 AS_OF = date(2026, 10, 30)
@@ -40,10 +41,22 @@ def ordering_agreement() -> Decimal:
     return Decimal(agreed) / len(pairs)
 
 
+def needs_review() -> list[str]:
+    registry = load_registry(Path("registry-data"))
+    return [
+        f"{e.authority.name} / {e.application.label} / {r.id}"
+        for e in registry.entries
+        for r in e.requirements
+        if publish_status(r, registry.sources, AS_OF) == "needs_review"
+    ]
+
+
 def main() -> None:
     agreement = ordering_agreement()
     passed = agreement == 1
     print(f"{'PASS' if passed else 'FAIL'}  confidence ordering agreement {agreement:.2f}")
+    for item in needs_review():
+        print(f"REVIEW  {item}")
     if not passed:
         sys.exit(1)
 

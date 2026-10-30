@@ -15,14 +15,14 @@ def _score(authority: str, purpose: str, requirement_id: str) -> Decimal:
     return _confidence(authority, purpose, requirement_id).score
 
 
-def _source(rank: SourceAuthority, published: date | None = None) -> Source:
+def _source(authority: SourceAuthority, published: date | None = None) -> Source:
     return Source(
         document="d",
         url="https://example.org",
         published=published,
         retrieved=AS_OF,
         last_verified=AS_OF,
-        source_authority=rank,
+        source_authority=authority,
     )
 
 

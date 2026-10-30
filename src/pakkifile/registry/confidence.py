@@ -9,18 +9,13 @@ from datetime import date
 from decimal import Decimal
 from typing import Literal
 
-from pakkifile.registry.model import Requirement, Source, SourceAuthority
+from pakkifile.registry.model import AUTHORITY_ORDER, Requirement, Source, SourceAuthority
 
 Level = Literal["High", "Medium", "Low"]
 
-# GLOSSARY "Source authority", highest first.
-AUTHORITY_WEIGHT: Mapping[SourceAuthority, Decimal] = {
-    "official_checklist": Decimal("1.00"),
-    "consulate_page": Decimal("0.90"),
-    "service_provider_page": Decimal("0.70"),
-    "agent": Decimal("0.40"),
-    "community_story": Decimal("0.20"),
-}
+AUTHORITY_WEIGHT: Mapping[SourceAuthority, Decimal] = dict(
+    zip(AUTHORITY_ORDER, map(Decimal, ("1.00", "0.90", "0.70", "0.40", "0.20")), strict=True)
+)
 # (maximum age in days, factor); anything older gets STALE.
 RECENCY = ((365, Decimal("1.0")), (730, Decimal("0.8")), (1095, Decimal("0.6")))
 STALE = Decimal("0.4")
@@ -46,13 +41,8 @@ def _strength(source: Source, as_of: date) -> Decimal:
 
 
 def confidence(req: Requirement, sources: Mapping[str, Source], as_of: date) -> Confidence:
-    supporting = sorted(
-        (_strength(sources[c.source], as_of) for c in req.citations if c.stance == "supports"),
-        reverse=True,
-    )
-    conflicting = [
-        _strength(sources[c.source], as_of) for c in req.citations if c.stance == "conflicts"
-    ]
+    supporting = sorted((_strength(s, as_of) for s in req.cited(sources, "supports")), reverse=True)
+    conflicting = [_strength(s, as_of) for s in req.cited(sources, "conflicts")]
     top = supporting[0]
     score = min(top + AGREEMENT_BONUS * (len(supporting) - 1), Decimal("1"))
     score -= WEAK_CONFLICT_COST * sum(1 for s in conflicting if s < top)

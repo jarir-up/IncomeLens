@@ -11,6 +11,14 @@ VisaCategory = Literal["C", "D"]
 SourceAuthority = Literal[
     "official_checklist", "consulate_page", "service_provider_page", "agent", "community_story"
 ]
+# GLOSSARY "Source authority", highest first.
+AUTHORITY_ORDER: tuple[SourceAuthority, ...] = (
+    "official_checklist",
+    "consulate_page",
+    "service_provider_page",
+    "agent",
+    "community_story",
+)
 Stance = Literal["supports", "conflicts"]
 
 
@@ -40,6 +48,9 @@ class Requirement(_Frozen):
     type: RequirementType
     condition: str | None = None
     citations: Annotated[tuple[Citation, ...], Field(min_length=1)]
+
+    def cited(self, sources: Mapping[str, Source], stance: Stance) -> list[Source]:
+        return [sources[c.source] for c in self.citations if c.stance == stance]
 
     @model_validator(mode="after")
     def _has_support(self) -> Self:
