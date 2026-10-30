@@ -4,7 +4,7 @@
 
 **Blocked by:** 02.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Every requirement in the entry appears once, with type and citation
-- [ ] No hard-coded colours or sizes outside the tokens
+- [x] Every requirement in the entry appears once, with type and citation
+- [x] No hard-coded colours or sizes outside the tokens
