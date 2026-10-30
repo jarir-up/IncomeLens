@@ -68,7 +68,7 @@ Every pull request passes `./scripts/check.sh` in CI. The second gate, a model r
 
 ### Issue tracker
 
-Local markdown under `.scratch/` until the GitHub repo exists, then GitHub issues. See `docs/agents/issue-tracker.md`.
+GitHub issues. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
