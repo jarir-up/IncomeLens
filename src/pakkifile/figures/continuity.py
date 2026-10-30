@@ -6,7 +6,7 @@ from decimal import Decimal
 
 from sqlalchemy import Connection, text
 
-from pakkifile.figures.money import Money
+from pakkifile.figures.money import ROUNDING, Money
 
 
 @dataclass(frozen=True)
@@ -50,3 +50,7 @@ def largest_unattributed_credit(
         share_of_credits=row.share,
         rows=(SourceRow(row.file_name, row.row_no, row.date, row.description),),
     )
+
+
+def format_share(share: Decimal) -> str:
+    return f"{(share * 100).quantize(Decimal('0.1'), rounding=ROUNDING)}%"

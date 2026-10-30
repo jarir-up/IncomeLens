@@ -4,7 +4,7 @@
 
 **Blocked by:** 02, 04.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] The seeded lump sum is found; a statement without one yields no finding
-- [ ] Finding names its kind, requirement and figure; text passes R-23
+- [x] The seeded lump sum is found; a statement without one yields no finding
+- [x] Finding names its kind, requirement and figure; text passes R-23
