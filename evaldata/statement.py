@@ -25,7 +25,7 @@ class StatementFacts:
     persona: str
     currency: str
     remittances: tuple[Remittance, ...]
-    cash_deposit: tuple[date, int]
+    cash_deposit: tuple[date, int] | None
     tuition_payment: tuple[date, int]
 
 
@@ -55,8 +55,9 @@ def write_statement(facts: StatementFacts, seed: int, out_dir: Path) -> Path:
         )
         rent_day = r.month.replace(day=rng.randint(10, 14))
         entries.append((rent_day, "IBFT RENT", -rng.randint(40_000, 60_000) * 100))
-    deposit_day, deposit = facts.cash_deposit
-    entries.append((deposit_day, "CASH DEPOSIT", deposit))
+    if facts.cash_deposit:
+        deposit_day, deposit = facts.cash_deposit
+        entries.append((deposit_day, "CASH DEPOSIT", deposit))
     tuition_day, tuition = facts.tuition_payment
     entries.append((tuition_day, "IBFT SYN HOCHSCHULE TUITION FEE", -tuition))
     entries.sort(key=lambda e: (e[0], e[1]))
