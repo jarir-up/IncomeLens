@@ -36,7 +36,7 @@ ignore = ["E501"]
 
 [tool.mypy]
 strict = true
-files = ["src", "tests", "evaldata"]
+files = ["src", "tests", "evaldata", "eval"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

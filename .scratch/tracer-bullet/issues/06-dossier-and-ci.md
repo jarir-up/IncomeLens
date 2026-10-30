@@ -4,8 +4,8 @@
 
 **Blocked by:** 03, 05.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Command exits non-zero if any stage's evaluation fails
-- [ ] Dossier cites every figure it shows
-- [ ] CI workflow runs the command
+- [x] Command exits non-zero if any stage's evaluation fails
+- [x] Dossier cites every figure it shows
+- [x] CI workflow runs the command

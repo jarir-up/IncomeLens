@@ -11,3 +11,4 @@ __pycache__/
 # Real personal documents never enter the repo
 vault/
 dist/
+build/

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Dossier · {{ dossier.applicant }}{% endblock %}
+{% block main %}
+<h1>{{ dossier.authority }} · {{ dossier.application }}</h1>
+<p>{{ dossier.applicant }}</p>
+<table>
+<thead><tr><th>Requirement</th><th>Evidence</th></tr></thead>
+<tbody>
+{% for item in dossier.items %}
+<tr>
+<td>{{ loop.index }}. {{ item.requirement.text }}</td>
+<td>
+{% if item.evidence %}
+{{ item.evidence.file_name }}
+{% if item.evidence.figure %}{% set f = item.evidence.figure %}{% set row = f.rows[0] %}
+<br>Largest credit with no identified sender:
+<span class="figure" data-source="{{ row.file_name }}, row {{ row.row_no }}">{{ f.amount.display() }}</span>
+({{ row.file_name }}, row {{ row.row_no }})
+{% endif %}
+{% else %}Not provided{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}
