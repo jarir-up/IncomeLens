@@ -8,6 +8,7 @@ import csv
 import random
 from dataclasses import dataclass
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 
 COLUMNS = ["row_id", "date", "description", "amount_minor", "currency", "synthetic"]
@@ -38,6 +39,9 @@ TRACER_FACTS = StatementFacts(
     cash_deposit=(date(2026, 9, 12), 90_000_000),
     tuition_payment=(date(2026, 9, 15), 110_000_000),
 )
+
+# Hand-computed: PKR 900,000 of PKR 2,400,000 credits.
+TRACER_EXPECTED_SHARE = Decimal("0.3750")
 
 
 def write_statement(facts: StatementFacts, seed: int, out_dir: Path) -> Path:

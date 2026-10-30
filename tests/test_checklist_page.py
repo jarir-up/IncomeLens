@@ -3,7 +3,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from pakkifile.registry.files import load_entry
-from pakkifile.web.render import render_checklist
+from pakkifile.web.checklist import render_checklist
 
 ENTRY = load_entry(Path("registry-data/entries/de-islamabad-study-d.yaml"))
 

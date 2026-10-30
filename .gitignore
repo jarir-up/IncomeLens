@@ -9,6 +9,6 @@ __pycache__/
 .pytest_cache/
 *.pyc
 # Real personal documents never enter the repo
-vault/
+/vault/
 dist/
 build/

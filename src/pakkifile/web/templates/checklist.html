@@ -9,7 +9,7 @@
 <tr class="requirement">
 <td>{{ req.text }}</td>
 <td>{{ req.type | capitalize }}{% if req.condition %}: {{ req.condition }}{% endif %}</td>
-<td><a href="{{ req.source.url }}">{{ req.source.document }}</a>, {{ req.source.section }}; verified {{ req.source.last_verified }}</td>
+<td><a href="{{ req.source.url }}">{{ req.source.document }}</a>, {{ req.source.section }}; retrieved {{ req.source.retrieved }}, verified {{ req.source.last_verified }}</td>
 </tr>
 {% endfor %}
 </tbody>

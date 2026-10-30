@@ -1,3 +1,4 @@
+import dataclasses
 from decimal import Decimal
 from pathlib import Path
 
@@ -27,11 +28,5 @@ def test_largest_unattributed_credit_is_the_seeded_cash_deposit(
 
 
 def test_no_figure_when_every_credit_has_a_counterparty(db: Connection, tmp_path: Path) -> None:
-    facts = StatementFacts(
-        persona=TRACER_FACTS.persona,
-        currency="PKR",
-        remittances=TRACER_FACTS.remittances,
-        cash_deposit=None,
-        tuition_payment=TRACER_FACTS.tuition_payment,
-    )
+    facts = dataclasses.replace(TRACER_FACTS, cash_deposit=None)
     assert largest_unattributed_credit(db, _load(db, facts, tmp_path)) is None

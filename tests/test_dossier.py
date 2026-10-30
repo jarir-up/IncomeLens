@@ -7,7 +7,7 @@ from pakkifile.dossier.build import EvidenceLink, build_dossier
 from pakkifile.figures.continuity import SourceRow, UnattributedCredit
 from pakkifile.figures.money import Money
 from pakkifile.registry.files import load_entry
-from pakkifile.web.render import render_dossier
+from pakkifile.web.dossier import render_dossier
 
 ENTRY = load_entry(Path("registry-data/entries/de-islamabad-study-d.yaml"))
 CREDIT = UnattributedCredit(

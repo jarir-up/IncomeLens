@@ -7,6 +7,7 @@ fact table, never from the code under test. Exits non-zero if any stage fails.
 """
 
 import argparse
+import dataclasses
 import os
 import sys
 from dataclasses import dataclass
@@ -18,7 +19,7 @@ from pathlib import Path
 import yaml
 from sqlalchemy import Connection, create_engine
 
-from evaldata.statement import TRACER_FACTS, StatementFacts, write_statement
+from evaldata.statement import TRACER_EXPECTED_SHARE, TRACER_FACTS, write_statement
 from pakkifile.dossier.build import EvidenceLink, build_dossier
 from pakkifile.figures.continuity import largest_unattributed_credit
 from pakkifile.mismatch.continuity import check_unattributed_credit
@@ -27,7 +28,8 @@ from pakkifile.registry.model import RegistryEntry
 from pakkifile.sources.pipeline import TRACER_SOURCE, build_entry
 from pakkifile.vault.ingest import add_person, ingest_statement_csv
 from pakkifile.vault.schema import metadata
-from pakkifile.web.render import render_checklist, render_dossier
+from pakkifile.web.checklist import render_checklist
+from pakkifile.web.dossier import render_dossier
 
 EXCERPT = Path("registry-data/sources/de-missions-pk-study-visa.html")
 PUBLISHED = Path("registry-data/entries/de-islamabad-study-d.yaml")
@@ -73,21 +75,18 @@ def _extraction(entry: RegistryEntry) -> list[Result]:
     ]
 
 
-def _without_cash_deposit(facts: StatementFacts) -> StatementFacts:
-    return StatementFacts(
-        facts.persona, facts.currency, facts.remittances, None, facts.tuition_payment
-    )
-
-
 def run(conn: Connection, out: Path) -> list[Result]:
     results: list[Result] = []
     entry = build_entry(EXCERPT.read_text(), TRACER_SOURCE, verified=date.today())
     results += _extraction(entry)
 
     published = load_entry(PUBLISHED)
-    same = [r.model_dump(exclude={"source"}) for r in published.requirements] == [
-        r.model_dump(exclude={"source"}) for r in entry.requirements
-    ]
+    rebuilt = build_entry(
+        EXCERPT.read_text(),
+        TRACER_SOURCE,
+        verified=published.requirements[0].source.last_verified,
+    )
+    same = published == rebuilt
     results.append(Result("registry", "published entry matches source", str(same), same))
 
     checklist = render_checklist(published)
@@ -108,12 +107,10 @@ def run(conn: Connection, out: Path) -> list[Result]:
     figure = largest_unattributed_credit(conn, item)
     assert TRACER_FACTS.cash_deposit is not None
     deposit = TRACER_FACTS.cash_deposit[1]
-    total = sum(r.amount_minor for r in TRACER_FACTS.remittances) + deposit
-    expected_share = (Decimal(deposit) / total).quantize(Decimal("0.0001"))
     figure_ok = (
         figure is not None
         and figure.amount.amount_minor == deposit
-        and figure.share_of_credits == expected_share
+        and figure.share_of_credits == TRACER_EXPECTED_SHARE
     )
     results.append(
         Result(
@@ -123,7 +120,9 @@ def run(conn: Connection, out: Path) -> list[Result]:
 
     tuition = next(r for r in published.requirements if r.id == TUITION)
     finding = check_unattributed_credit(figure, tuition)
-    clean = write_statement(_without_cash_deposit(TRACER_FACTS), seed=7, out_dir=out / "clean")
+    clean = write_statement(
+        dataclasses.replace(TRACER_FACTS, cash_deposit=None), seed=7, out_dir=out / "clean"
+    )
     clean_item = ingest_statement_csv(conn, add_person(conn, "applicant"), clean)
     false_alarm = check_unattributed_credit(largest_unattributed_credit(conn, clean_item), tuition)
     found = finding is not None and finding.kind == "M2"

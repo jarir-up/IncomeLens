@@ -9,8 +9,10 @@ Q-1 to Q-15 settled 2026-10-30 (ADR-0012, 0030 to 0041; DESIGN.md; RULES R-22).
 
 ## Broke
 
+- Brief 01: `.gitignore`'s `vault/` (meant for real documents) also hid `src/pakkifile/vault/`; anchored to `/vault/`. Caught in review before any push.
+
 ## Next
 
-1. Owner creates the GitHub repo; then push `main` and the brief branches, open one PR each, and switch the tracker to GitHub issues.
-2. Brief 00 is verified locally only; CI pass and fail-on-lint are unobserved until the repo exists.
-3. Brief 01: ticket 01 done; tickets 02 to 06 in progress.
+1. Owner creates the GitHub repo; then push `main`, `brief-00-wire-checks` and `brief-01-tracer` (stacked), open one PR each, and switch the tracker to GitHub issues. CI is unobserved until then.
+2. Brief 02: registry model and confidence. Checklist rows lack the confidence DESIGN.md requires until it lands.
+3. Live fetching needs a WebFetch allowlist for official domains in `.claude/settings.json`; the agent may not edit its own permissions.
