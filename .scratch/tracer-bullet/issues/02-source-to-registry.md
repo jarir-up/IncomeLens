@@ -4,8 +4,8 @@
 
 **Blocked by:** None (can start immediately). Needs ADR-0042.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Extraction precision and recall against the hand-labelled checklist are both 1.0
-- [ ] An entry missing any R-21 citation field fails validation
-- [ ] Checksum ignores whitespace-only changes and changes when the text changes
+- [x] Extraction precision and recall against the hand-labelled checklist are both 1.0
+- [x] An entry missing any R-21 citation field fails validation
+- [x] Checksum ignores whitespace-only changes and changes when the text changes
